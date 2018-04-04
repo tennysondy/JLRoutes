@@ -13,7 +13,7 @@
 #import "JLRoutes.h"
 #import "JLRRouteDefinition.h"
 #import "JLRParsingUtilities.h"
-
+#import "JLRouteLoginManager.h"
 
 NSString *const JLRoutePatternKey = @"JLRoutePattern";
 NSString *const JLRouteURLKey = @"JLRouteURL";
@@ -21,6 +21,10 @@ NSString *const JLRouteSchemeKey = @"JLRouteScheme";
 NSString *const JLRouteWildcardComponentsKey = @"JLRouteWildcardComponents";
 NSString *const JLRoutesGlobalRoutesScheme = @"JLRoutesGlobalRoutesScheme";
 
+//自定义router参数
+NSString *const kJLRouteNavi = @"JLRouteNavi";
+NSString *const kJLRouteUseRegex = @"JLRouteUseRegex";
+NSString *const kJLRouteNeedLogin = @"JLRouteNeedLogin";
 
 static NSMutableDictionary *JLRGlobal_routeControllersMap = nil;
 
@@ -158,6 +162,27 @@ static Class JLRGlobal_routeDefinitionClass;
     [self _registerRoute:route];
 }
 
+- (void)addRoute:(NSString *)routePattern extendMode:(NSArray *)extendMode handler:(BOOL (^)(NSDictionary<NSString *, id> *parameters))handlerBlock
+{
+    NSArray <NSString *> *optionalRoutePatterns = [JLRParsingUtilities expandOptionalRoutePatternsForPattern:routePattern];
+    JLRRouteDefinition *route = [[JLRGlobal_routeDefinitionClass alloc] initWithPattern:routePattern priority:0 handlerBlock:handlerBlock];
+    if (extendMode) {
+        route.extendMode = [NSMutableArray arrayWithArray:extendMode];
+    }
+
+    if (optionalRoutePatterns.count > 0) {
+        // there are optional params, parse and add them
+        for (NSString *pattern in optionalRoutePatterns) {
+            JLRRouteDefinition *optionalRoute = [[JLRGlobal_routeDefinitionClass alloc] initWithPattern:pattern priority:0 handlerBlock:handlerBlock];
+            [self _registerRoute:optionalRoute];
+            [self _verboseLog:@"Automatically created optional route: %@", optionalRoute];
+        }
+        return;
+    }
+
+    [self _registerRoute:route];
+}
+
 - (void)removeRoute:(JLRRouteDefinition *)routeDefinition
 {
     [self.mutableRoutes removeObject:routeDefinition];
@@ -282,8 +307,38 @@ static Class JLRGlobal_routeDefinitionClass;
     JLRRouteRequest *request = [[JLRRouteRequest alloc] initWithURL:URL options:options additionalParameters:parameters];
     
     for (JLRRouteDefinition *route in [self.mutableRoutes copy]) {
+
         // check each route for a matching response
-        JLRRouteResponse *response = [route routeResponseForRequest:request];
+        JLRRouteResponse *response;
+
+        //检测正则匹配
+        if (route.extendMode && [route.extendMode containsObject:kJLRouteUseRegex]) {
+            BOOL isMatch = NO;
+            NSString *todoURL = [NSString stringWithFormat:@"/%@%@", URL.host, URL.path];
+            NSRange searchedRange = NSMakeRange(0, [todoURL length]);
+            NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:route.pattern options:NSRegularExpressionCaseInsensitive error:nil];
+            NSArray *matches = [regex matchesInString:todoURL options:0 range:searchedRange];
+            if (matches.count > 0) {
+                NSTextCheckingResult *textResult = matches.firstObject;
+                NSString *matchURL = [todoURL substringWithRange:textResult.range];
+
+                if ([matchURL length] == [todoURL length]) {
+                    isMatch = YES;
+                }
+            }
+
+            if (isMatch) {
+                NSDictionary *routeVariables = [route routeVariablesForRequest:request];
+                NSDictionary *matchParams = [route matchParametersForRequest:request routeVariables:routeVariables];
+                response = [JLRRouteResponse validMatchResponseWithParameters:matchParams];
+            } else {
+                response = [JLRRouteResponse invalidMatchResponse];
+            }
+
+        } else {
+            response = [route routeResponseForRequest:request];
+        }
+
         if (!response.isMatch) {
             continue;
         }
@@ -296,6 +351,18 @@ static Class JLRGlobal_routeDefinitionClass;
         }
         
         [self _verboseLog:@"Match parameters are %@", response.parameters];
+
+        if (route.extendMode && [route.extendMode containsObject:kJLRouteNeedLogin]) {
+            id<JLRouteLoginProtocol> instance = [JLRouteLoginManager sharedInstance].loginInstance;
+            if (instance) {
+                [instance jlr_checkLocalAndLogin:^{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [route callHandlerBlockWithParameters:response.parameters];
+                    });
+                }];
+                return YES;
+            }
+        }
         
         // Call the handler block
         didRoute = [route callHandlerBlockWithParameters:response.parameters];
@@ -344,7 +411,6 @@ static Class JLRGlobal_routeDefinitionClass;
 #pragma clang diagnostic pop
     
     va_end(argsList);
-    NSLog(@"[JLRoutes]: %@", formattedLogMessage);
 }
 
 - (JLRRouteRequestOptions)_routeRequestOptions

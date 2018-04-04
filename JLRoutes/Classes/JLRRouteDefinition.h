@@ -41,6 +41,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// The handler block to invoke when a match is found.
 @property (nonatomic, copy, readonly) BOOL (^handlerBlock)(NSDictionary *parameters);
 
+//支持扩展模式：登录等
+@property (nonatomic, strong, nullable) NSMutableArray *extendMode;
+
 /// Check for route definition equality.
 - (BOOL)isEqualToRouteDefinition:(JLRRouteDefinition *)routeDefinition;
 

@@ -34,7 +34,10 @@ extern NSString *const JLRouteWildcardComponentsKey;
 /// @see JLRoutes +globalRoutes
 extern NSString *const JLRoutesGlobalRoutesScheme;
 
-
+//自定义router参数
+extern NSString *const kJLRouteNavi;
+extern NSString *const kJLRouteUseRegex;
+extern NSString *const kJLRouteNeedLogin;
 
 /**
  The JLRoutes class is the main entry-point into the JLRoutes framework. Used for accessing schemes, managing routes, and routing URLs.
@@ -85,6 +88,8 @@ extern NSString *const JLRoutesGlobalRoutesScheme;
 
 /// Registers multiple routePatterns for one handler with default priority (0) in the receiving scheme.
 - (void)addRoutes:(NSArray<NSString *> *)routePatterns handler:(BOOL (^__nullable)(NSDictionary<NSString *, id> *parameters))handlerBlock;
+
+- (void)addRoute:(NSString *)routePattern extendMode:(NSArray *)extendMode handler:(BOOL (^)(NSDictionary<NSString *, id> *parameters))handlerBlock;
 
 /// Removes the route from the receiving scheme.
 - (void)removeRoute:(JLRRouteDefinition *)routeDefinition;

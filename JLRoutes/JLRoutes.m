@@ -364,7 +364,6 @@ static Class JLRGlobal_routeDefinitionClass;
             if (instance) {
                 [instance jlr_checkLocalAndLogin:^{
                     dispatch_async(dispatch_get_main_queue(), ^{
-
                         [route callHandlerBlockWithParameters:finalParameters];
                     });
                 }];

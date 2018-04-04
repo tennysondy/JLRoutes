@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		07673E252074A82A006D1F2A /* JLRouteLoginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 07673E232074A82A006D1F2A /* JLRouteLoginManager.m */; };
+		07673E262074A82A006D1F2A /* JLRouteLoginManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 07673E242074A82A006D1F2A /* JLRouteLoginManager.h */; };
+		07673E2D2074A8E7006D1F2A /* UIViewController+JLRHelp.h in Headers */ = {isa = PBXBuildFile; fileRef = 07673E2B2074A8E7006D1F2A /* UIViewController+JLRHelp.h */; };
+		07673E2E2074A8E7006D1F2A /* UIViewController+JLRHelp.m in Sources */ = {isa = PBXBuildFile; fileRef = 07673E2C2074A8E7006D1F2A /* UIViewController+JLRHelp.m */; };
 		5C5AD9B51B45C07300ED25A3 /* JLRoutes.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D33681A16C6DC9300F983AA /* JLRoutes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5C5AD9B61B45C07800ED25A3 /* JLRoutes.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D33681C16C6DC9300F983AA /* JLRoutes.m */; };
 		5D33681616C6DC9300F983AA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D33681516C6DC9300F983AA /* Foundation.framework */; };
@@ -47,6 +51,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		07673E232074A82A006D1F2A /* JLRouteLoginManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JLRouteLoginManager.m; sourceTree = "<group>"; };
+		07673E242074A82A006D1F2A /* JLRouteLoginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JLRouteLoginManager.h; sourceTree = "<group>"; };
+		07673E2B2074A8E7006D1F2A /* UIViewController+JLRHelp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+JLRHelp.h"; sourceTree = "<group>"; };
+		07673E2C2074A8E7006D1F2A /* UIViewController+JLRHelp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+JLRHelp.m"; sourceTree = "<group>"; };
 		5CB4EB491B45BF5B0058E91A /* JLRoutes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JLRoutes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D33681216C6DC9300F983AA /* libJLRoutes.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libJLRoutes.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D33681516C6DC9300F983AA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -158,6 +166,10 @@
 				5DA69C5B1DAB4C3A007C8E9C /* JLRRouteResponse.m */,
 				5DA69C541DAB4C3A007C8E9C /* JLRParsingUtilities.h */,
 				5DA69C551DAB4C3A007C8E9C /* JLRParsingUtilities.m */,
+				07673E242074A82A006D1F2A /* JLRouteLoginManager.h */,
+				07673E232074A82A006D1F2A /* JLRouteLoginManager.m */,
+				07673E2B2074A8E7006D1F2A /* UIViewController+JLRHelp.h */,
+				07673E2C2074A8E7006D1F2A /* UIViewController+JLRHelp.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -182,6 +194,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07673E262074A82A006D1F2A /* JLRouteLoginManager.h in Headers */,
+				07673E2D2074A8E7006D1F2A /* UIViewController+JLRHelp.h in Headers */,
 				5DA69C681DAB4C3A007C8E9C /* JLRRouteResponse.h in Headers */,
 				5DA69C5C1DAB4C3A007C8E9C /* JLRParsingUtilities.h in Headers */,
 				5DE775661EA1B15200375C1D /* JLRRouteHandler.h in Headers */,
@@ -322,8 +336,10 @@
 				5DA69C6A1DAB4C3A007C8E9C /* JLRRouteResponse.m in Sources */,
 				5DA69C661DAB4C3A007C8E9C /* JLRRouteRequest.m in Sources */,
 				5D33681D16C6DC9300F983AA /* JLRoutes.m in Sources */,
+				07673E252074A82A006D1F2A /* JLRouteLoginManager.m in Sources */,
 				5DA69C5E1DAB4C3A007C8E9C /* JLRParsingUtilities.m in Sources */,
 				5DA69C621DAB4C3A007C8E9C /* JLRRouteDefinition.m in Sources */,
+				07673E2E2074A8E7006D1F2A /* UIViewController+JLRHelp.m in Sources */,
 				5DE775681EA1B15200375C1D /* JLRRouteHandler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

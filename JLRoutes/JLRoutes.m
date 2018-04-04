@@ -14,6 +14,7 @@
 #import "JLRRouteDefinition.h"
 #import "JLRParsingUtilities.h"
 #import "JLRouteLoginManager.h"
+#import "UIViewController+JLRHelp.h"
 
 NSString *const JLRoutePatternKey = @"JLRoutePattern";
 NSString *const JLRouteURLKey = @"JLRouteURL";
@@ -352,12 +353,19 @@ static Class JLRGlobal_routeDefinitionClass;
         
         [self _verboseLog:@"Match parameters are %@", response.parameters];
 
+        NSMutableDictionary *finalParameters = [NSMutableDictionary dictionaryWithDictionary:response.parameters];
+        //解决拉起登录框时，导航栏使用登录导航栏的问题。在拉起登录框前，先把导航栏存在参数里
+        if ([UIViewController jlr_currentNavigationController]) {
+            finalParameters[kJLRouteNavi] = [UIViewController jlr_currentNavigationController];
+        }
+
         if (route.extendMode && [route.extendMode containsObject:kJLRouteNeedLogin]) {
             id<JLRouteLoginProtocol> instance = [JLRouteLoginManager sharedInstance].loginInstance;
             if (instance) {
                 [instance jlr_checkLocalAndLogin:^{
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [route callHandlerBlockWithParameters:response.parameters];
+
+                        [route callHandlerBlockWithParameters:finalParameters];
                     });
                 }];
                 return YES;
@@ -365,7 +373,7 @@ static Class JLRGlobal_routeDefinitionClass;
         }
         
         // Call the handler block
-        didRoute = [route callHandlerBlockWithParameters:response.parameters];
+        didRoute = [route callHandlerBlockWithParameters:finalParameters];
         
         if (didRoute) {
             // if it was routed successfully, we're done - otherwise, continue trying to route

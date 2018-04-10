@@ -361,7 +361,7 @@ static Class JLRGlobal_routeDefinitionClass;
 
         if (route.extendMode && [route.extendMode containsObject:kJLRouteNeedLogin]) {
             id<JLRouteLoginProtocol> instance = [JLRouteLoginManager sharedInstance].loginInstance;
-            if (instance) {
+            if (instance && [instance respondsToSelector:@selector(jlr_checkLocalAndLogin:)]) {
                 [instance jlr_checkLocalAndLogin:^{
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [route callHandlerBlockWithParameters:finalParameters];

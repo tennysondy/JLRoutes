@@ -12,6 +12,7 @@ typedef void(^JLRouteLoginCompletion)(void);
 
 @protocol JLRouteLoginProtocol <NSObject>
 
+- (void)jlr_registerLoginInstance;
 - (void)jlr_checkLocalAndLogin:(JLRouteLoginCompletion)completion;
 
 @end

@@ -414,7 +414,7 @@ static Class JLRGlobal_routeDefinitionClass;
     va_start(argsList, format);
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wformat-nonliteral"
-    NSString *formattedLogMessage = [[NSString alloc] initWithFormat:format arguments:argsList];
+//    NSString *formattedLogMessage = [[NSString alloc] initWithFormat:format arguments:argsList];
 #pragma clang diagnostic pop
     
     va_end(argsList);
